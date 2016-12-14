@@ -46,6 +46,18 @@
 					$(this).append(editDiv);
 					//セルにフォーカスを当てる
 					editDiv.focus();
+					
+					//フォーカスが外れたときの処理を追加
+					$(".table2sheet-edit-div").on('blur.table2sheet', function(){
+						//編集用divの内容をセルに書き戻す
+						var cellContent = $(this).html();
+						//編集用divのイベント除去
+						$(this).off('table2sheet');
+						//セルの余白を元に戻す
+						$(this).parent().css('padding','');
+						//セルに書き戻す
+						$(this).parent().html(cellContent);
+					});
 				});
 			});
 		}
