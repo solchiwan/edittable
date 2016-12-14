@@ -3,68 +3,76 @@
 <head>
 <meta charset="utf-8">
 <title>edittable サンプル1</title>
-<link href="../lib/css/jquery-ui.min.css" rel="stylesheet" type="text/css">
-<link href="../source/jquery.edittable.css" rel="stylesheet" type="text/css">
 <link href="css/sample1.css" rel="stylesheet" type="text/css">
-<script src="../lib/js/jquery.min.js"></script>
-<script src="../lib/js/jquery-ui.min.js"></script>
-<script src="../source/jquery.edittable.js"></script>
+<link href="../source/jquery.table2sheet.css" rel="stylesheet" type="text/css">
+<script src="../essencial/js/jquery.min.js"></script>
+<script src="../source/jquery.table2sheet.js"></script>
 </head>
 
 <body>
 <header>
-  <h1>edittable sample 1</h1>
+  <h1>table2sheet sample 1</h1>
 </header>
 <main>
-	<h2>一般的なテーブル(thead,tbody)</h2>
+  <h2>一般的なテーブル(thead,tbody)</h2>
 	<table>
 		<thead>
 			<tr>
-				<th>No</th>
-				<th>氏名</th>
-				<th>住所</th>
-				<th>生年月日</th>
-				<th>備考</th>
+				<th style="width: 30px;">No</th>
+				<th style="width: 100px;">氏名</th>
+				<th style="width: 100px;">よみがな</th>
+			  	<th style="width: 300px">住所</th>
+				<th style="width: 100px;">生年月日</th>
+				<th style="width: 200px;">備考</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<td>1</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td style="height: 30px;width: 30px;">1</td>
+				<td style="width: 100px;">山田　太郎</td>
+				<td style="width: 100px;">やまだ　たろう</td>
+				<td style="width: 300px">東京都中野区中野1-2-3</td>
+				<td style="width: 100px;">1999年9月9日</td>
+			  	<td style="width: 200px;">登録第一号の山田さん</td>
 			</tr>
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td style="height: 30px;width: 30px;">&nbsp;</td>
+				<td style="width: 100px;"></td>
+				<td style="width: 100px;"></td>
+				<td style="width: 300px"></td>
+				<td style="width: 100px;"></td>
+				<td style="width: 200px;"></td>
 			</tr>
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td style="height: 30px;width: 30px;">&nbsp;</td>
+				<td style="width: 100px;"></td>
+				<td style="width: 100px;"></td>
+				<td style="width: 300px"></td>
+				<td style="width: 100px;"></td>
+				<td style="width: 200px;"></td>
 			</tr>
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td style="height: 30px;width: 30px;">&nbsp;</td>
+				<td style="width: 100px;"></td>
+				<td style="width: 100px;"></td>
+				<td style="width: 300px"></td>
+				<td style="width: 100px;"></td>
+				<td style="width: 200px;"></td>
 			</tr>
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td style="height: 30px;width: 30px;">&nbsp;</td>
+				<td style="width: 100px;"></td>
+				<td style="width: 100px;"></td>
+				<td style="width: 300px"></td>
+				<td style="width: 100px;"></td>
+				<td style="width: 200px;"></td>
 			</tr>
 		</tbody>
 	</table>
 </main>
+<footer>
+	table2sheet sample 2016
+</footer>
+	<script>$('table').table2sheet();</script>
 </body>
 </html>
