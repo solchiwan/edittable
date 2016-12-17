@@ -31,7 +31,7 @@
 		//ツールバーの表示設定
 		toolbarPosition: 'top',
 		//設置するツールバーのツール
-		toolbarElements: ['bold','italic','underline']
+		toolbarElements: ['bold','italic','underline','forecolor','backcolor','cellcolor','removeFormat','cellcolorClear']
 	};
 	
 	//このプラグインのプロパティ
@@ -261,6 +261,7 @@
 							parts: $('<button />').text('B'),
 							class: 'table2sheet-boldButton',
 							event: 'mousedown',
+							title: '太字',
 							task: boldButtonTask
 						});
 						break;
@@ -270,6 +271,7 @@
 							parts: $('<button />').text('I'),
 							class: 'table2sheet-italicButton',
 							event: 'mousedown',
+							title: '斜体',
 							task: italicButtonTask
 						});
 						break;
@@ -279,7 +281,82 @@
 							parts: $('<button />').text('U'),
 							class: 'table2sheet-underlineButton',
 							event: 'mousedown',
+							title: '下線',
 							task: underlineButtonTask
+						});
+						break;
+					case 'forecolor':
+						addToolbar({
+							id: 'forecolorButton',
+							parts: $('<button />').css('color','#F00').text('A'),
+							class: 'tablessheet-forecolorButton',
+							event: 'mousedown',
+							title: '文字色変更',
+							task: forecolorButtonTask
+						});
+						addToolbar({
+							id: 'forecolorSelectButton',
+							parts: $('<button />').text('▼'),
+							class: 'tablessheet-forecolorSelectButton',
+							event: 'mousedown',
+							title: '文字色選択',
+							task: forecolorSelecorTask
+						});
+						break;
+					case 'backcolor':
+						addToolbar({
+							id: 'backcolorButton',
+							parts: $('<button />').css({'color':'#FFF','background-color':'#F00'}).text('A'),
+							class: 'tablessheet-backcolorButton',
+							event: 'mousedown',
+							title: '文字背景色',
+							task: backcolorButtonTask
+						});
+						addToolbar({
+							id: 'backcolorSelectButton',
+							parts: $('<button />').text('▼'),
+							class: 'tablessheet-backcolorSelectButton',
+							event: 'mousedown',
+							title: '文字背景色選択',
+							task: backcolorSelecorTask
+						});
+						break;
+					case 'cellcolor':
+						addToolbar({
+							id: 'cellcolorButton',
+							parts: $('<button />').css({'color':'#FFF','background-color':'#F00'}).text('C'),
+							class: 'tablessheet-cellcolorButton',
+							event: 'mousedown',
+							title: 'セル色',
+							task: cellcolorButtonTask
+						});
+						addToolbar({
+							id: 'cellcolorSelectButton',
+							parts: $('<button />').text('▼'),
+							class: 'tablessheet-cellcolorSelectButton',
+							event: 'mousedown',
+							title: 'セル色選択',
+							task: cellcolorSelecorTask
+						});
+						break;
+					case 'removeFormat':
+						addToolbar({
+							id: 'removeFormatButton',
+							parts: $('<button />').text('R'),
+							class: 'tablessheet-removeFormatButton',
+							event: 'mousedown',
+							title: '文字装飾クリア',
+							task: removeFormatButtonTask
+						});
+						break;
+					case 'cellcolorClear':
+						addToolbar({
+							id: 'cellcolorClearButton',
+							parts: $('<button />').append($('<span />').text('R')),
+							class: 'tablessheet-cellcolorClearButton',
+							event: 'mousedown',
+							title: 'セル色クリア',
+							task: cellcolorClearButtonTask
 						});
 						break;
 				}
@@ -314,6 +391,11 @@
 			if (params.event && params.task) {
 				tool.on(params.event + '.' + tool.attr('id'), function(e){params.task.apply(tool, e)});
 			}
+			if (params.title){
+				tool.data('title', params.title);
+			}
+			
+			tooltip(tool);
 		}
 	};
 
@@ -337,4 +419,128 @@
 			document.execCommand('underline');
 		}
 	}
+	
+	//文字色の変更
+	var forecolorButtonTask = function(){
+		if ($('.' + def.editDiv)[0]){
+			var forecolor = $(this).css('color');
+			document.execCommand('forecolor',false,forecolor);
+		}
+	}
+	
+	//文字色変更カラーパネル表示
+	var forecolorSelecorTask = function(){
+		createColorSelecter('tablessheet-forecolorButton', 'color');
+	};
+	
+	//文字背景色の変更
+	var backcolorButtonTask = function(){
+		if ($('.' + def.editDiv)[0]){
+			var backcolor = $(this).css('background-color');
+			document.execCommand('backcolor', false, backcolor);
+		}
+	};
+						
+	//文字背景色変更カラーパネル表示
+	var backcolorSelecorTask = function(){
+		createColorSelecter('tablessheet-backcolorButton', 'background-color');
+	};
+	
+	//セル色の変更
+	var cellcolorButtonTask = function(){
+		if ($('.' + def.editDiv)[0]){
+			var backcolor = $(this).css('background-color');
+			$('.' + def.editDiv).parent('td,th').css('background-color',backcolor);
+		}
+	};
+	
+	//セル色変更カラーパネル表示
+	var cellcolorSelecorTask = function(){
+		createColorSelecter('tablessheet-cellcolorButton', 'background-color');
+	};
+	
+	//文字装飾クリア
+	var removeFormatButtonTask = function(){
+		if ($('.' + def.editDiv)[0]){
+			var selection = window.getSelection();
+			if (selection.rangeCount > 0){
+				var range = selection.getRangeAt(0);
+				if (range.startOffset == range.endOffset) {
+					document.execCommand('selectAll');
+				}
+				document.execCommand('removeFormat');
+			}
+		}
+	};
+	
+	//セル色変更クリア
+	var cellcolorClearButtonTask = function(){
+		if ($('.' + def.editDiv)[0]){
+			$('.' + def.editDiv).parent('td,th').css('background-color','');
+		}
+	};
+	
+	//カラーセレクターパネル
+	var createColorSelecter = function(targetObjName, colorsetAttr){
+		if (!$('.table2sheet-colorSelecter')[0]){
+			var colorSelector = $('<div />').addClass('table2sheet-colorSelecter');
+			colorSelector.data('color-select-target', targetObjName);
+			colorSelector.data('color-select-attr', colorsetAttr);
+			var colorParts = ['00','33','66','99','CC','FF'];
+			for (var r = 0; r < 6; r++){
+				for (var g = 0; g < 6; g++){
+					for (var b = 0; b < 6; b++){
+						var rgb = '#' + colorParts[r] + colorParts[g] + colorParts[b];
+						var colorButton = $('<button />').addClass('table2sheet-colorSelectButton');
+						colorButton.css('background-color', rgb);
+						colorSelector.append(colorButton);
+					}
+				}
+			}
+			var colorSelectorCloser = $('<button />').addClass('table2sheet-colorSelectorCloser');
+			colorSelectorCloser.text('close');
+			colorSelector.append(colorSelectorCloser);
+
+			$('.' + def.toolbar).append(colorSelector);
+
+			colorSelectorCloser.on('click.table2sheet', function(){
+				$('.table2sheet-colorSelecter').off('.table2sheet').remove();
+			});
+
+			$('.table2sheet-colorSelectButton').on('click.table2sheet', function(){
+				var pickedColor = $(this).css('background-color');
+				var targetClass = $('.table2sheet-colorSelecter').data('color-select-target');
+				var targetAttr = $('.table2sheet-colorSelecter').data('color-select-attr');
+				$('.' + targetClass).css(targetAttr, pickedColor);
+				$('.table2sheet-colorSelecter').off('.table2sheet').remove();
+				if (colorsetAttr == 'background-color'){
+					var rgbArr = pickedColor.match(/\d+/g);
+					if (parseInt(rgbArr[0]) + parseInt(rgbArr[1]) + parseInt(rgbArr[2]) > 500){
+						$('.' + targetClass).css('color', '#000');
+					} else {
+						$('.' + targetClass).css('color', '#FFF');
+					}
+				}
+			});
+		} else {
+			$('.table2sheet-colorSelecter').data('color-select-target', targetObjName);
+			$('.table2sheet-colorSelecter').data('color-select-attr', colorsetAttr);
+		}
+	};
+	
+	//ツールチップ
+	var tooltip = function(targetObj){
+		$(targetObj).on('mouseover.table2sheet', function(){
+			var title = $(this).data('title');
+			var tooltipDiv = $('<div />').addClass('table2sheet-tooltip').text(title);
+			$('.' + def.toolbar).append(tooltipDiv);
+			var left = $(this).position().left - tooltipDiv.width() / 2 + 12;
+			var top = -1 * (tooltipDiv.height() + 4);
+			tooltipDiv.css({'left':left+'px', 'top': top + 'px'});
+		});
+		
+		$(targetObj).on('mouseout.table2sheet', function(){
+			$('.table2sheet-tooltip').remove();
+		});
+	};
 })(jQuery);

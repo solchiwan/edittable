@@ -22,11 +22,13 @@
 	background-color: #F8F8F8;
 	border-radius: 4px;
 	margin: 2px 0px 2px 0px;
+	position: relative;
 }
 
 .table2sheet-toolBar button {
 	width: 24px;
 	height: 24px;
+	position: relative;
 }
 
 .table2sheet-boldButton {
@@ -39,4 +41,62 @@
 
 .table2sheet-underlineButton {
 	text-decoration: underline;
+}
+
+.table2sheet-colorSelecter {
+	box-sizing: border-box;
+	padding: 4px;
+	background-color: #F8F8F8;
+	border: solid 1px #CCCCCC;
+	border-radius: 4px;
+	position: absolute;
+	width: 370px;
+	height: auto;
+	top: calc(100% + 10px);
+	text-align: center;
+}
+
+.table2sheet-colorSelectButton {
+	box-sizing: border-box;
+	width: 20px !important;
+	height: 20px !important;
+	margin: 0px;
+}
+
+.table2sheet-colorSelectorCloser {
+	width: auto !important;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: 2px auto 0px auto;
+}
+
+.tablessheet-forecolorButton,
+.tablessheet-backcolorButton,
+.tablessheet-cellcolorButton,
+.tablessheet-removeFormatButton {
+	margin-left: 4px;
+}
+
+.tablessheet-forecolorSelectButton,
+.tablessheet-backcolorSelectButton,
+.tablessheet-cellcolorSelectButton {
+	width: 16px !important;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+.tablessheet-cellcolorClearButton {
+	padding-left: 2px;
+	padding-right: 2px;
+}
+.tablessheet-cellcolorClearButton span {
+	border: dotted 1px #999;
+	width: 18px;
+	height: 18px;
+}
+
+.table2sheet-tooltip {
+	position: absolute;
+	border: solid 1px #CCCCCC;
+	background-color: #FFF;
+	border-radius: 4px;
 }
