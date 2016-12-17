@@ -256,7 +256,7 @@
 			for (var i = 0; i < settings.toolbarElements.length; i++){
 				switch (settings.toolbarElements[i]){
 					case 'bold':
-						addToolbarElement({
+						addToolbar({
 							id: 'boldButton',
 							parts: $('<button />').text('B'),
 							class: 'table2sheet-boldButton',
@@ -265,7 +265,7 @@
 						});
 						break;
 					case 'italic':
-						addToolbarElement({
+						addToolbar({
 							id: 'italicButton',
 							parts: $('<button />').text('I'),
 							class: 'table2sheet-italicButton',
@@ -274,7 +274,7 @@
 						});
 						break;
 					case 'underline':
-						addToolbarElement({
+						addToolbar({
 							id: 'underlineButton',
 							parts: $('<button />').text('U'),
 							class: 'table2sheet-underlineButton',
@@ -288,7 +288,7 @@
 	};
 	
 	//ツールバーに追加機能
-	var addToolbarElement = function(params){
+	var addToolbar = function(params){
 		//追加するDOMオブジェクト
 		var tool = null;
 		if (params.parts){
