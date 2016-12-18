@@ -1,0 +1,137 @@
+/*
+name: jquery.table2sheet.css
+ 
+MIT License
+
+Copyright (c) 2016 solchiwan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+@charset "utf-8";
+/* CSS Document */
+
+.table2sheet-edit-div {
+	-moz-box-sizing: border-box;
+    box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-wrap: break-word;
+	outline: none;
+}
+
+.table2sheet-toolBar {
+	box-sizing: border-box;
+	width: 100%;
+	height: auto;
+	min-height: 30px;
+	padding: 2px 10px 2px 10px;
+	border: solid 1px #CCCCCC;
+	background-color: #F8F8F8;
+	border-radius: 4px;
+	margin: 2px 0px 2px 0px;
+	position: relative;
+}
+
+.table2sheet-toolBar button {
+	width: 24px;
+	height: 24px;
+	position: relative;
+}
+
+.table2sheet-boldButton {
+	font-weight: bold;
+}
+
+.table2sheet-italicButton {
+	font-style: oblique;
+}
+
+.table2sheet-underlineButton {
+	text-decoration: underline;
+}
+
+.table2sheet-colorSelecter {
+	box-sizing: border-box;
+	padding: 4px;
+	background-color: #F8F8F8;
+	border: solid 1px #CCCCCC;
+	border-radius: 4px;
+	position: absolute;
+	width: 370px;
+	height: auto;
+	top: calc(100% + 10px);
+	text-align: center;
+}
+
+.table2sheet-colorSelectButton {
+	box-sizing: border-box;
+	width: 20px !important;
+	height: 20px !important;
+	margin: 0px;
+}
+
+.table2sheet-colorSelectorCloser {
+	width: auto !important;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: 2px auto 0px auto;
+}
+
+.tablessheet-forecolorButton,
+.tablessheet-backcolorButton,
+.tablessheet-cellcolorButton,
+.tablessheet-removeFormatButton {
+	margin-left: 4px;
+}
+
+.tablessheet-forecolorSelectButton,
+.tablessheet-backcolorSelectButton,
+.tablessheet-cellcolorSelectButton {
+	width: 16px !important;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+.tablessheet-cellcolorClearButton {
+	padding-left: 2px;
+	padding-right: 2px;
+}
+.tablessheet-cellcolorClearButton span {
+	border: dotted 1px #999;
+	width: 18px;
+	height: 18px;
+}
+
+.table2sheet-tooltip {
+	position: absolute;
+	border: solid 1px #CCCCCC;
+	background-color: #FFF;
+	border-radius: 4px;
+}
+
+.table2sheet-horizontal-resize {
+	overflow: hidden;
+	resize: horizontal;
+}
+.table2sheet-vertical-resize {
+	overflow: hidden;
+	resize: vertical;
+}
