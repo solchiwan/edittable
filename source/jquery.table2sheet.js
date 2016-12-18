@@ -61,7 +61,9 @@ SOFTWARE.
 		//セルの状態
 		cellMatrix: null,
 		//テーブルの行数
-		rows: 0
+		rows: 0,
+		//テーブルのリサイズ可否
+		resizable: true
 	};
 	
 	//このプラグインの定数
@@ -77,7 +79,15 @@ SOFTWARE.
 		//ツールバーのクラス
 		toolbar: 'table2sheet-toolBar',
 		//編集用divのクラス
-		editDiv: 'table2sheet-edit-div'
+		editDiv: 'table2sheet-edit-div',
+		//横方向リサイズハンドルセル用クラス
+		resizeH: 'table2sheet-horizontal-handle',
+		//縦方向リサイズハンドルセル用クラス
+		resizeV: 'table2sheet-vertical-handle',
+		//リサイズ実行中セル
+		resizeC: 'table2sheet-resize-current',
+		resizeHandleerH: 'table2sheet-horizontal-handleDiv',
+		resizeHandleerV: 'table2sheet-vertical-handleDiv'
 	};
 	
 	//table2sheet(メソッド名)で指定できるようにメソッドを登録
@@ -152,6 +162,10 @@ SOFTWARE.
 		
 		//tfootの処理
 		$(targetObj).find('tfoot tr').each(setEditableRow);
+		
+		if (properties.resizable){
+			addResizeHandle();
+		}
 	};
 	
 	//一行分のセルにIDを付与し、編集可能セルなら編集可能にするイベントを付ける
@@ -563,4 +577,65 @@ SOFTWARE.
 			$('.table2sheet-tooltip').remove();
 		});
 	};
+	
+	//リサイズハンドルを付与する
+	var addResizeHandle = function(){
+		//水平方向
+		var resize_complate_h = false;
+		
+		$(properties.targetTable).find('thead tr').each(function(){
+			if (!resize_complate_h){
+				resize_complate_h = addHhorizontalResizeHandle(this);
+			}
+		});
+		
+		if (!resize_complate_h){
+			$(properties.targetTable).find(':not(thead,tfoot) tr').each(function(){
+				if (!resize_complate_h){
+					resize_complate_h = addHhorizontalResizeHandle(this);
+				}
+			});
+		}
+		
+		//垂直方向
+		$(properties.targetTable).find('td:first-child, th:first-child').addClass(def.resizeV);
+		
+		setResizeHandle();
+	};
+	
+	//水平方向のリサイズハンドル付与
+	var addHhorizontalResizeHandle = function(target){
+		var nocolspanFg = true;
+		$(target).find('th,td').each(function(){
+			if (!$(this).attr('colspan')){
+				$(this).addClass(def.resizeH);
+			} else {
+				nocolspanFg = false;
+			}
+		});
+		return nocolspanFg;
+	};
+	
+	//リサイズハンドルの作用
+	var setResizeHandle = function(){
+		$('.' + def.resizeH).on('mouseover', function(){
+			if (!$(this).find('.'+def.resizeHandleerH)[0]){
+				$(this).append($('<div />').addClass(def.resizeHandleerH));
+			}
+			
+			$(this).on('mouseout', function(){
+				$(this).find('.'+def.resizeHandleerH).remove();
+			});
+		});
+		
+		$('.' + def.resizeH).on('mouseover', function(){
+			if (!$(this).find('.'+def.resizeHandleerV)[0]){
+				$(this).append($('<div />').addClass(def.resizeHandleerV));
+			}
+			
+			$(this).on('mouseout', function(){
+				$(this).find('.'+def.resizeHandleerV).remove();
+			});
+		});
+	}
 })(jQuery);
