@@ -127,25 +127,11 @@ SOFTWARE.
 	border-radius: 4px;
 }
 
-.table2sheet-horizontal-handle,
-.table2sheet-vertical-handle {
-	position: relative;
+.table2sheet-horizontal-resize {
+	overflow: hidden;
+	resize: horizontal;
 }
-
-.table2sheet-horizontal-handleDiv {
-	position: absolute;
-	width: 2px;
-	height: 100%;
-	top: 0px;
-	left: calc(100% - 2px);
-	cursor: col-resize;
-}
-
-.table2sheet-vertical-handleDiv {
-	position: absolute;
-	width: calc(100% - 4px);
-	height: 2px;
-	top: calc(100% - 2px);
-	left: 0px;
-	cursor: row-resize;
+.table2sheet-vertical-resize {
+	overflow: hidden;
+	resize: vertical;
 }
