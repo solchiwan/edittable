@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>edittable サンプル1</title>
+<link href="sample/css/sample1.css" rel="stylesheet" type="text/css">
+<link href="source/jquery.table2sheet.css" rel="stylesheet" type="text/css">
+<script src="essencial/js/jquery.min.js"></script>
+<script src="source/jquery.table2sheet.js"></script>
+</head>
+
+<body>
+<header>
+  <h1>table2sheet sample 1</h1>
+</header>
+<main>
+  <h2>一般的なテーブル(thead,tbody)</h2>
+	<table>
+		<thead>
+			<tr>
+				<th style="width: 30px;">No</th>
+				<th style="width: 150px;">氏名</th>
+				<th style="width: 200px;">よみがな</th>
+			  	<th style="width: 300px">住所</th>
+				<th style="width: 150px;">生年月日</th>
+				<th style="width: 200px;">備考</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td style="height: 30px;">1</td>
+				<td>山田　太郎</td>
+				<td>やまだ　たろう</td>
+				<td>東京都中野区中野1-2-3</td>
+				<td>1999年9月9日</td>
+			  	<td>登録第一号の山田さん</td>
+			</tr>
+			<tr>
+				<td style="height: 30px;">&nbsp;</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td style="height: 30px;">&nbsp;</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td style="height: 30px;">&nbsp;</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td style="height: 30px;">&nbsp;</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+</main>
+<footer>
+	table2sheet sample 2016
+</footer>
+	<script>
+		$('table').table2sheet();
+	</script>
+</body>
+</html>
