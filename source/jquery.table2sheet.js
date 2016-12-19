@@ -48,8 +48,12 @@ SOFTWARE.
 		isThTagEditable: false,
 		//編集禁止タグにするクラス名
 		classOfUnedit: 'noedit-cell',
+		//テーブルの編集範囲の高さの上限
+		maxHeight: '600px',
 		//ツールバーの表示設定
 		toolbarPosition: 'top',
+		//テーブルのリサイズ可否
+		resizable: true,
 		//設置するツールバーのツール
 		toolbarElements: ['bold','italic','underline','forecolor','backcolor','cellcolor','removeFormat','cellcolorClear']
 	};
@@ -62,8 +66,6 @@ SOFTWARE.
 		cellMatrix: null,
 		//テーブルの行数
 		rows: 0,
-		//テーブルのリサイズ可否
-		resizable: true
 	};
 	
 	//このプラグインの定数
@@ -80,14 +82,18 @@ SOFTWARE.
 		toolbar: 'table2sheet-toolBar',
 		//編集用divのクラス
 		editDiv: 'table2sheet-edit-div',
-		//横方向リサイズハンドルセル用クラス
-		resizeCellH: 'table2sheet-horizontal-resize',
-		//縦方向リサイズハンドルセル用クラス
-		resizeCellV: 'table2sheet-vertical-resize',
-		//リサイズ実行中セル(水平方向)
-		resizeH: 'table2sheet-horizontal-resizeing',
-		//リサイズ実行中セル(垂直方向)
-		resizeV: 'table2sheet-vertical-resizeing'
+		//水平方向リサイズ可能セル
+		rasizable_h: 'table2sheet-resizable-horizontal',
+		//垂直方向リサイズ可能セル
+		rasizable_v: 'table2sheet-resizable-vertical',
+		//水平方向リサイズハンドル
+		resizeHandleH: 'table2sheet-resize-handle-horizontal',
+		//垂直方向リサイズハンドル
+		resizeHandleV: 'table2sheet-resize-handle-vertical',
+		//水平方向リサイズ中のセルのクラス
+		rsizingH: 'table2sheet-resizing-horizontal',
+		//水平方向リサイズ中のセルのクラス
+		rsizingV: 'table2sheet-resizing-vertical'
 	};
 	
 	//table2sheet(メソッド名)で指定できるようにメソッドを登録
@@ -139,7 +145,7 @@ SOFTWARE.
 		properties.targetTable = targetObj;
 		
 		//テーブルをラップする
-		$(targetObj).wrap($('<div />').addClass(def.wrapper));
+		$(targetObj).wrap($('<div />').addClass(def.wrapper).css('max-height', settings.maxHeight));
 		$('.' + def.wrapper).wrap($('<div />').addClass(def.root));
 		
 		//ツールバーのセットアップ
@@ -163,7 +169,7 @@ SOFTWARE.
 		//tfootの処理
 		$(targetObj).find('tfoot tr').each(setEditableRow);
 		
-		if (properties.resizable){
+		if (settings.resizable){
 			addResizeHandle();
 		}
 	};
@@ -603,53 +609,80 @@ SOFTWARE.
 	
 	//水平方向のリサイズハンドル付与
 	var addHorizontalResize = function(target){
-		var nocolspanFg = true;
-		$(target).find('th,td').each(function(){
-			if (!$(this).attr('colspan')){
-				$(this).addClass(def.resizeCellH);
-				$(this).on('mousedown.table2sheet', function(){
-					$(this).addClass(def.resizeH);
-					$(this).data('cell-base-width', $(this).width());
-					$(properties.targetTable).data('base-width', $(properties.targetTable).width());
-					$(document).on('mousemove.table2sheet', function(){
-						var tWidth = $(properties.targetTable).data('base-width');
-						var dWidth = $('.' + def.resizeH).width() - $('.' + def.resizeH).data('cell-base-width');
-						tWidth += dWidth;
-						$(properties.targetTable).width(tWidth);
+		var noColspan = true;
+		$(target).find('td,th').each(function(){
+			if ($(this).attr('colspan')){
+				noColspan = false;
+				return true;
+			}
+			$(this).addClass(def.rasizable_h);
+			$(this).on('mouseenter.table2sheet', function(){
+				if (!$(this).find('.'+def.resizeHandleH)[0]){
+					$(this).append($('<div />').addClass(def.resizeHandleH));
+				}
+				
+				$('.'+def.resizeHandleH).on('mousedown.table2sheet',function(e){
+					var parentCell = $(this).closest('td,th');
+					parentCell.addClass(def.rsizingH);
+					parentCell.data('cell-width', parentCell.width());
+					parentCell.data('table-width',$(properties.targetTable).width());
+					parentCell.data('cursor-x', e.clientX);
+					$('body').on('mousemove.table2sheet', function(e){
+						var dx = e.clientX - $('.' + def.rsizingH).data('cursor-x');
+						var cellWidth = $('.' + def.rsizingH).data('cell-width');
+						var tableWidth = $('.' + def.rsizingH).data('table-width');
+						$('.' + def.rsizingH).width(cellWidth + dx);
+						$(properties.targetTable).width(tableWidth + dx);
 					});
-					$(document).on('mouseup.table2sheet', function(){
-						$(properties.targetTable).data('base-width','');
-						$('.' + def.resizeH).data('cell-base-width','');
-						$('.' + def.resizeH).removeClass(def.resizeH);
-						$(document).off('.table2sheet');
+					$('body').on('mouseup.table2sheet', function(){
+						$('body').off('mousemove.table2sheet');
+						$('body').off('mouseup.table2sheet');
+						$('.' + def.rsizingH).removeClass(def.rsizingH);
 					});
 				});
-			} else {
-				nocolspanFg = false;
-			}
+			});
+			
+			$(this).on('mouseleave.table2sheet', function(){
+				$(this).find('.'+def.resizeHandleH).remove();
+			});
 		});
-		return nocolspanFg;
+		return noColspan;
 	};
 	
 	//垂直方向のリサイズ処理
 	var addVerticalResize = function(){
-		$(properties.targetTable).find('td:first-child, th:first-child').addClass(def.resizeCellV);
-		$(properties.targetTable).find('td:first-child, th:first-child').on('mousedown.table2sheet', function(){
-			$(this).addClass(def.resizeV);
-			$(this).data('cell-base-height', $(this).height());
-			$(properties.targetTable).data('base-height', $(properties.targetTable).height());
-			$(document).on('mousemove.table2sheet', function(){
-				var tHeight = $(properties.targetTable).data('base-height');
-				var dHeight = $('.' + def.resizeV).height() - $('.' + def.resizeV).data('cell-base-height');
-				tHeight += dHeight;
-				$(properties.targetTable).height(tHeight);
+		$(properties.targetTable).find('tr td:first-child, tr th:first-child').each(function(){
+			if ($(this).attr('rowspan')){
+				return true;
+			}
+			$(this).addClass(def.rasizable_v);
+			$(this).on('mouseenter.table2sheet', function(e){
+				if (!$(this).find('.'+def.resizeHandleV)[0]){
+					$(this).append($('<div />').addClass(def.resizeHandleV));
+				}
+				$('.' + def.resizeHandleV).on('mousedown.table2sheet', function(e){
+					var parentCell = $(this).closest('td,th');
+					parentCell.addClass(def.rsizingV);
+					parentCell.data('cell-height', parentCell.height());
+					parentCell.data('table-height', $(properties.targetTable).height());
+					parentCell.data('cursor-y', e.clientY);
+					$('body').on('mousemove.table2sheet', function(e){
+						var dy = e.clientY - $('.' + def.rsizingV).data('cursor-y');
+						var cellHeight = $('.' + def.rsizingV).data('cell-height');
+						var tableHeight = $('.' + def.rsizingV).data('table-height');
+						$('.' + def.rsizingV).height(cellHeight + dy);
+						$(properties.targetTable).height(tableHeight + dy);
+					});
+					$('body').on('mouseup.table2sheet', function(){
+						$('body').off('mousemove.table2sheet');
+						$('body').off('mouseup.table2sheet');
+						$('.' + def.rsizingV).removeClass(def.rsizingV);
+					});
+				});
 			});
-			$(document).on('mouseup.table2sheet', function(){
-				$(properties.targetTable).data('base-height','');
-				$('.' + def.resizeV).data('cell-base-height','');
-				$('.' + def.resizeV).removeClass(def.resizeV);
-				$(document).off('.table2sheet');
+			$(this).on('mouseleave.table2sheet', function(){
+				$(this).find('.'+def.resizeHandleV).remove();
 			});
 		});
 	};
-})(jQuery);
+})(jQuery); 

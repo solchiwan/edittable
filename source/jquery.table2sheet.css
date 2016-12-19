@@ -38,6 +38,12 @@ SOFTWARE.
 	outline: none;
 }
 
+.table2sheet-table-wrapper {
+	width: 100%;
+	overflow: auto;
+	position: relative;
+}
+
 .table2sheet-toolBar {
 	box-sizing: border-box;
 	width: 100%;
@@ -127,11 +133,27 @@ SOFTWARE.
 	border-radius: 4px;
 }
 
-.table2sheet-horizontal-resize {
-	overflow: hidden;
-	resize: horizontal;
+.table2sheet-resizable-horizontal,
+.table2sheet-resizable-vertical {
+	position: relative;
 }
-.table2sheet-vertical-resize {
-	overflow: hidden;
-	resize: vertical;
+
+.table2sheet-resize-handle-horizontal {
+	position: absolute;
+	width: 4px;
+	height: calc(100% - 4px);
+	right: 0px;
+	top: 0px;
+	cursor: col-resize;
+	background-color: transparent;
+}
+
+.table2sheet-resize-handle-vertical {
+	position: absolute;
+	width: calc(100% - 4px);
+	height: 4px;
+	bottom: 0px;
+	left: 0px;
+	cursor: row-resize;
+	background-color: transparent;
 }
