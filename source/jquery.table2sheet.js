@@ -54,8 +54,10 @@ SOFTWARE.
 		toolbarPosition: 'top',
 		//テーブルのリサイズ可否
 		resizable: true,
+		//CSVファイルのBOMまの有無
+		csvNeedsBom: true,
 		//設置するツールバーのツール
-		toolbarElements: ['bold','italic','underline','forecolor','backcolor','cellcolor','removeFormat','cellcolorClear']
+		toolbarElements: ['bold','italic','underline','forecolor','backcolor','cellcolor','removeFormat','cellcolorClear','download']
 	};
 	
 	//このプラグインのプロパティ
@@ -399,6 +401,16 @@ SOFTWARE.
 							task: cellcolorClearButtonTask
 						});
 						break;
+					case 'download':
+						addToolbar({
+							id: 'downloadButton',
+							parts: $('<button />').append($('<span />').text('DL')),
+							class: 'tablessheet-downloadButton',
+							event: 'mousedown',
+							title: '編集したテーブルをのデータをダウンロード',
+							task: downloadButtonTask
+						});
+						break;
 				}
 			}
 		}
@@ -685,4 +697,91 @@ SOFTWARE.
 			});
 		});
 	};
-})(jQuery); 
+	
+	//CSVダウンロード
+	var downloadButtonTask = function(filename){
+		var csvData = table2Csv();
+		var blob = null;
+		if (settings.csvNeedsBom){
+			var bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+			blob = new Blob([bom,csvData], {type: "text/csv"});
+		} else {
+			blob = new Blob([csvData], {type: "text/csv"});
+		}
+		
+		if (!filename){
+			filename = 'data.csv';
+		}
+		
+		if (blob instanceof Blob){
+			if (window.navigator.msSaveBlob) { 
+				window.navigator.msSaveBlob(blob, filename); 
+				window.navigator.msSaveOrOpenBlob(blob, filename); 
+			} else {
+				var dlAnc = $('<a />').attr({'href': window.URL.createObjectURL(blob), 'download': filename});
+				$('body').append(dlAnc.append($('<span>dl</span>')));
+				dlAnc.find('span').trigger('click');
+				dlAnc.remove();
+			}
+		}
+		
+	};
+	
+	//HTMLテーブルをCSVにデータにする
+	var table2Csv = function(){
+		//セルのデータを格納する文字列
+		var csvData = '';
+		//theadからセルの内容を取得していく
+		$(properties.targetTable).find('thead tr').each(function(){
+			csvData = tr2Csv(csvData, this);
+		});
+		
+		$(properties.targetTable).find(':not(thead,tfoot) tr').each(function(){
+			csvData = tr2Csv(csvData, this);
+		});
+		
+		$(properties.targetTable).find('tfoot tr').each(function(){
+			csvData = tr2Csv(csvData, this);
+		});
+		return csvData;
+	};
+	
+	//テーブル1列をCSVデータ化
+	var tr2Csv = function(csvData, targetTr){
+		//渡されたCSVデータ文字列に追加するので、改行を追加(既にデータがあるとき)
+		if (csvData != ''){
+			csvData += "\n";
+		}
+		//行データの宣言
+		var lineData = '';
+		var colCount = 0;
+		$(targetTr).find('th,td').each(function(){
+			//行データに追加するので、セパレーターの「，」を入れる
+			if (lineData != ''){
+				lineData += ',';
+			}
+			//もし編集中セルだった場合は、セルに書き戻す
+			if ($(this).find('.' + def.editDiv)[0]){
+				//編集用divの内容保管
+				var cellContent = $(this).find('.' + def.editDiv).html();
+				//セルに書き戻す
+				$(this).html(cellContent);
+			}
+			//セル内の内容を取り出す(brタグは改行コードに変換する)
+			var cellData = $(this).html();
+			cellData = $('<div />').html(cellData.replace(/<div>/ig, "\n<div>")).text();
+			cellData = cellData.replace(/"/g, '""');
+			var colId = $(this).attr(def.colId);
+			while (colCount < colId) {
+				lineData += '"",';
+				colCount++;
+			}
+			lineData += '"' + cellData + '"';
+			colCount++;
+		});
+		csvData += lineData;
+		return csvData;
+	};
+	
+})(jQuery);
+
